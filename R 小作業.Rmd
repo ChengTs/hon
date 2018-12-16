@@ -1,0 +1,90 @@
+--- 
+title: "R穨" 
+author: "綠﹙" 
+date: "2018/12/16" 
+output:   
+  html_document:     
+    theme: united     
+    fig_width: 10     
+    fig_height: 7.5     
+    toc : true     
+    toc_depth: 4     
+    toc_float: 
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r , echo=FALSE}
+setwd('C:/Users/cheng/Desktop')
+data1 = read.csv('stock1.csv',encoding='BIG5')
+data2 = read.csv('stock2.csv',encoding='BIG5')
+```
+##a
+```{r ,echo=TRUE}
+table1=cbind(data1[,c(1,2,7,9)],data2[,c(2,7,9)])
+names(table1)=c("ら戳","Θユ计1","Μ絃基1","Θユ掸计1","Θユ计2","Μ絃基2","Θユ掸计2")
+print(table1)
+```
+##c
+```{r,echo=TRUE}
+x1=table1[,3]
+x2=table1[,6]
+a1=x1
+sd1=((x1-mean(x1))/sd(x1))
+a1[sd1>1]=1
+a1[sd1<(-1)]=-1
+a1[(-1)<sd1 & sd1<1]=0
+a2=x2
+sd2=((x2-mean(x2))/sd(x2))
+a2[sd2>1]=1
+a2[sd2<1]=-1
+a2[(-1)<sd2 & sd2<1]=0
+a1
+a2
+```
+##d
+```{r,echo=TRUE}
+library(DT)
+library(dplyr)
+table2=cbind(table1,a1,a2)
+datatable(table2) %>%
+formatStyle("Μ絃基1","a1",backgroundColor = styleEqual(c(0, 1,-1), c('gray','yellow',"red"))) %>%
+formatStyle("Μ絃基2","a2",backgroundColor = styleEqual(c(0, 1,-1), c('chocolate','coral',"cyan")))
+
+```
+
+##e
+```{r,echo=FALSE}
+x3 = as.numeric(table1$Θユ掸计1)
+x4 = as.numeric(table1$Θユ计2)
+b1=x3
+sd3=((x3-mean(x3))/sd(x3))
+b1[sd3>1]=1
+b1[sd3<(-1)]=-1
+b1[(-1)<sd3 & sd3<1]=0
+b2=x4
+sd4=((x4-mean(x4))/sd(x4))
+b2[sd4>1]=1
+b2[sd4<(-1)]=-1
+b2[(-1)<sd4 & sd4<1]=0
+```
+
+```{r,echo=FALSE}
+table3 = cbind(table2,b1,b2)
+c1=a1==1 & b1==1
+c1[c1==TRUE]=1
+c2=a1==(-1) & b1==(-1)
+c2[c2==TRUE]=-1
+c=c1+c2
+d1=a2==1 & b2==1
+d1[d1==TRUE]=1
+d2=a2==(-1) & b2==(-1)
+d2[d2==TRUE]=(-1)
+d=d1+d2
+table3=cbind(table3,c,d)
+datatable(table3) %>%
+formatStyle("Μ絃基1","c",backgroundColor = styleEqual(c(1,-1), c('yellow',"red"))) %>%
+formatStyle("Μ絃基2","d",backgroundColor = styleEqual(c(1,-1), c('coral',"cyan")))
+
+```
+
